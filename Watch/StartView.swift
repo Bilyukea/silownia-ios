@@ -53,6 +53,8 @@ struct StartView: View {
             }
             .navigationTitle("Siłownia")
         }
-        .onAppear { workout.requestAuthorization() }
+        .onAppear {
+            if !WorkoutManager.isScreenshotRun { workout.requestAuthorization() }
+        }
     }
 }

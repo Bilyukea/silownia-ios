@@ -1,8 +1,17 @@
 import SwiftUI
 
 struct TreadmillListView: View {
+    /// Для скриншотов: запуск с аргументом `-openProgram B`.
+    @State private var path: [TreadmillProgram] = {
+        if let id = UserDefaults.standard.string(forKey: "openProgram"),
+           let p = TreadmillProgram.builtIn.first(where: { $0.id == id }) {
+            return [p]
+        }
+        return []
+    }()
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List(TreadmillProgram.builtIn) { program in
                 NavigationLink(value: program) {
                     VStack(alignment: .leading, spacing: 4) {

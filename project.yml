@@ -55,6 +55,7 @@ targets:
         CFBundleDisplayName: Siłownia
         WKApplication: true
         WKCompanionAppBundleIdentifier: pl.bilyukea.silownia
+        WKRunsIndependentlyOfCompanionApp: true
         WKBackgroundModes:
           - workout-processing
         NSHealthShareUsageDescription: Часы читают пульс во время тренировки, чтобы вести программу по пульсу.

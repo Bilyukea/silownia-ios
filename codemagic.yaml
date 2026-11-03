@@ -25,6 +25,25 @@ workflows:
     artifacts:
       - build.log
 
+  screenshots:
+    name: Скриншоты в симуляторах (iPhone + часы)
+    instance_type: mac_mini_m2
+    max_build_duration: 25
+    environment:
+      xcode: latest
+    scripts:
+      - name: Генерация проекта
+        script: |
+          brew install xcodegen
+          xcodegen generate
+      - name: Сборка, запуск в симуляторах, скриншоты
+        script: |
+          bash scripts/screenshots.sh
+    artifacts:
+      - screenshots/*.png
+      - screenshots.zip
+      - build.log
+
   ipa:
     name: IPA для установки через Sideloadly
     instance_type: mac_mini_m2

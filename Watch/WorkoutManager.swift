@@ -8,7 +8,10 @@ final class WorkoutManager: NSObject, ObservableObject {
     let healthStore = HKHealthStore()
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
-    private var timer: Timer?
+    var timer: Timer?
+    /// Демо‑режим для скриншотов в симуляторе: пульс синтетический, HealthKit не используется.
+    var demoMode = false
+    var demoHR: Double = 118
 
     @Published var heartRate: Double?
     @Published var hrSamples: [HRPoint] = []
@@ -74,9 +77,14 @@ final class WorkoutManager: NSObject, ObservableObject {
         }
     }
 
-    private func tick() {
+    func tick() {
         guard var r = runner else { return }
         now = Date()
+        if demoMode, let seg = r.currentSegment {
+            demoHR = Self.nextDemoHR(demoHR, segment: seg)
+            heartRate = demoHR
+            hrSamples.append(HRPoint(t: elapsed, bpm: demoHR))
+        }
         let t = elapsed
         let event = r.update(at: t, heartRate: heartRate)
         runner = r

@@ -3,11 +3,13 @@ import Charts
 
 /// Во время тренировки: страницы листаются колёсиком Digital Crown.
 struct SessionView: View {
+    @State private var page: Int = UserDefaults.standard.integer(forKey: "demoPage")
+
     var body: some View {
-        TabView {
-            MainPage()
-            ChartPage()
-            ProgramPage()
+        TabView(selection: $page) {
+            MainPage().tag(0)
+            ChartPage().tag(1)
+            ProgramPage().tag(2)
         }
         .tabViewStyle(.verticalPage)
     }

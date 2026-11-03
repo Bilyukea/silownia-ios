@@ -16,12 +16,19 @@ struct WatchRootView: View {
     @EnvironmentObject var workout: WorkoutManager
 
     var body: some View {
-        if workout.isRunning {
-            SessionView()
-        } else if let s = workout.summary {
-            SummaryView(runner: s)
-        } else {
-            StartView()
+        Group {
+            if workout.isRunning {
+                SessionView()
+            } else if let s = workout.summary {
+                SummaryView(runner: s)
+            } else {
+                StartView()
+            }
+        }
+        .onAppear {
+            if WorkoutManager.wantsDemo && !workout.isRunning {
+                workout.startDemo()
+            }
         }
     }
 }
