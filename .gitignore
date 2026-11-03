@@ -1,0 +1,9 @@
+# Проект генерируется XcodeGen из project.yml
+*.xcodeproj
+build/
+DerivedData/
+Payload/
+*.ipa
+build.log
+.DS_Store
+xcuserdata/
