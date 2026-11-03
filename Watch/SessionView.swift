@@ -55,6 +55,7 @@ struct MainPage: View {
                 Text(formatClock(t))
                     .font(.footnote.monospacedDigit())
                     .foregroundStyle(.secondary)
+                    .padding(.trailing, 14)   // не наезжать на индикатор страниц
             }
 
             HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -126,6 +127,8 @@ struct ChartPage: View {
 
     var body: some View {
         let points = Array(workout.hrSamples.suffix(300))
+        let tEnd = (points.last?.t ?? 600) / 60
+        let tStart = min(points.first?.t ?? 0, tEnd * 60 - 60) / 60
         VStack(alignment: .leading, spacing: 4) {
             Text("Пульс, последние ~10 мин")
                 .font(.caption2)
@@ -141,7 +144,15 @@ struct ChartPage: View {
                 }
             }
             .chartYScale(domain: 90...180)
-            .chartXAxis(.hidden)
+            .chartXScale(domain: max(0, tStart)...max(tEnd, tStart + 1))
+            .chartXAxis {
+                AxisMarks(values: .stride(by: 2)) { v in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let m = v.as(Double.self) { Text("\(Int(m))′") }
+                    }
+                }
+            }
         }
         .padding(.horizontal, 2)
     }

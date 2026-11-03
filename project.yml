@@ -23,6 +23,8 @@ targets:
       path: Config/iOS-Info.plist
       properties:
         CFBundleDisplayName: Siłownia
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -53,6 +55,8 @@ targets:
       path: Config/Watch-Info.plist
       properties:
         CFBundleDisplayName: Siłownia
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         WKApplication: true
         WKCompanionAppBundleIdentifier: pl.bilyukea.silownia
         WKRunsIndependentlyOfCompanionApp: true
