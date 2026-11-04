@@ -53,7 +53,7 @@ workflows:
     scripts:
       - name: Генерация проекта
         script: |
-          brew install xcodegen ldid
+          brew install xcodegen
           xcodegen generate
       - name: Архив без подписи
         script: |
@@ -72,13 +72,20 @@ workflows:
           set -e
           rm -rf Payload && mkdir Payload
           cp -R build/Silownia.xcarchive/Products/Applications/Silownia.app Payload/
-          if [ -d Payload/Silownia.app/Watch/SilowniaWatch.app ]; then
-            ldid -SConfig/Watch.entitlements Payload/Silownia.app/Watch/SilowniaWatch.app/SilowniaWatch
+          APP=Payload/Silownia.app
+          WATCH=$APP/Watch/SilowniaWatch.app
+          # Ad-hoc подпись с entitlements: сначала вложенное приложение для часов, потом телефонное.
+          # Sideloadly переподпишет своим сертификатом, но возьмёт entitlements (HealthKit) отсюда.
+          if [ -d "$WATCH" ]; then
+            codesign --force --sign - --entitlements Config/Watch.entitlements --timestamp=none "$WATCH"
+            codesign -d --entitlements - "$WATCH" 2>/dev/null | head -20 || true
           else
             echo "ВНИМАНИЕ: приложение для часов не встроено"
           fi
-          ldid -SConfig/iOS.entitlements Payload/Silownia.app/Silownia
-          zip -qr Silownia-unsigned.ipa Payload
+          codesign --force --sign - --entitlements Config/iOS.entitlements --timestamp=none "$APP"
+          codesign -d --entitlements - "$APP" 2>/dev/null | head -20 || true
+          zip -qry Silownia-unsigned.ipa Payload
+          ls -la Silownia-unsigned.ipa
     artifacts:
       - Silownia-unsigned.ipa
       - build.log
